@@ -103,7 +103,19 @@ module ZendeskAPI
       def create(client, attributes = {})
         ZendeskAPI::Client.check_deprecated_namespace_usage attributes, singular_resource_name
         resource = new(client, attributes)
-        return unless resource.save
+        #debugger
+        
+        # Patch:
+        # {"description"=>"Record validation errors", 
+        #  "details"=>{"email"=>[{"description"=>"Email: rebecca.wen@splashtop.com is already being used by another user"}]}, 
+        #  "error"=>"RecordInvalid"}
+        #
+        # return unless resource.save
+        my_action_result = resource.save
+        if (my_action_result.class == Hash) && (my_action_result["error"] == "RecordInvalid")
+          return my_action_result
+        end
+        #debugger
         resource
       end
 

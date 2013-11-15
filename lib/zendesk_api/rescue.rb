@@ -12,6 +12,9 @@ module ZendeskAPI
           logger.warn e.message
           logger.warn e.backtrace.join("\n")
           logger.warn "\t#{e.response[:body].inspect}" if e.response
+          #debugger
+          @my_result = e.response[:body]
+          return @my_result
         end
       end
 
@@ -27,6 +30,8 @@ module ZendeskAPI
               rescue Faraday::Error::ClientError => e
                 log_error(e, method)
                 opts[:with].respond_to?(:call) ? opts[:with].call : opts[:with]
+                #debugger
+                return @my_result
               end
             end
           end
